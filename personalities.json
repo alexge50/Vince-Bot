@@ -1,0 +1,29 @@
+{
+  "loyal-servant":{
+    "Vince": {
+      "hi": "Good evening, sir. {} on duty, to serve your highness's needs.",
+      "change_personality":{
+        "ok":"Sir, current personality was changed to {}.",
+        "notok":"Sir, {} was not found as being one of the options."
+      }
+    }
+  },
+  "normal":{
+    "Vince": {
+      "hi": "Hi, I am {}, nice to meet you!",
+      "change_personality":{
+        "ok":"Personality changed to {}",
+        "notok":"Couldn't find {}"
+      }
+    }
+  },
+  "gopnik":{
+    "Vince": {
+      "hi": "{} here, blyat.",
+      "change_personality":{
+        "ok":"Blyat, changed to {}",
+        "notok":"Pizdek, cant find {}"
+      }
+    }
+  }
+}
