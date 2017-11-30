@@ -13,6 +13,7 @@ class Vince(commands.Bot):
         self.token = None
         self.personalities = None
         self.current_personality = None
+        self.name = None
 
         with open(config_file, "r") as f:
             json_config = json.load(f)
@@ -24,8 +25,9 @@ class Vince(commands.Bot):
             self.personalities = json.load(f)
 
         self.current_personality = json_config["initial_personality"]
+        self.name = json_config["name"]
 
-        self.modules["MainModule"] = Modules.Main.Main(self, json_config)
+        self.modules["MainModule"] = Modules.Main.Main(self)
         self.add_cog(self.modules["MainModule"])
 
     async def on_ready(self):
