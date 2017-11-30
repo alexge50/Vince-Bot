@@ -10,8 +10,8 @@ class Vince(commands.Bot):
     def __init__(self, config_file, command_prefix, **options):
         super().__init__(command_prefix, **options)
         self.modules = {}
-
-        self.add_listener(self.on_ready)
+        self.token = None
+        self.personalities = None
 
         with open(config_file, "r") as f:
             json_config = json.load(f)
