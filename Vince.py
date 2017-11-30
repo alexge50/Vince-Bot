@@ -3,54 +3,30 @@ from discord.ext import commands
 
 import json
 
-
-class Vince:  # main cog
-    def __init__(self, bot, init_data, personalities):
-        self.bot = bot
-        self.name = init_data["name"]
-        self.personalities = personalities
-        self.current_personality = "normal"
-
-    @commands.command(pass_context=True, no_pm=True)
-    async def hi(self, ctx):
-        await self.bot.say(self.personalities[self.current_personality]["Vince"]["hi"].format(self.name))
-
-    @commands.command(pass_context=True, no_pm=True)
-    async def change_personality(self, ctx, *, personality: str):
-        if personality in self.personalities:
-            self.current_personality = personality
-            key = "ok"
-        else:
-            key = "notok"
-        await self.bot.say(self.personalities[self.current_personality]["Vince"]["change_personality"][key].format(personality))
+import Modules.Main
 
 
-bot = commands.Bot(command_prefix="v$")
-token = None
-vince = None
+class Vince(commands.Bot):
+    def __init__(self, config_file, command_prefix, **options):
+        super().__init__(command_prefix, **options)
+        self.modules = {}
 
+        self.add_listener(self.on_ready)
 
-@bot.event
-async def on_ready():
-    print('Logged in as:\n{0} (ID: {0.id})'.format(bot.user))
+        with open(config_file, "r") as f:
+            json_config = json.load(f)
 
+        with open(json_config["token_file"]) as f:
+            self.token = f.read()
 
-def init(config_file):
-    global token
-    global vince
+        with open(json_config["personalities_file"]) as f:
+            self.personalities = json.load(f)
 
-    with open(config_file, "r") as f:
-        json_config = json.load(f)
+        self.modules["MainModule"] = Modules.Main.Main(self, json_config, self.personalities)
+        self.add_cog(self.modules["MainModule"])
 
-    with open(json_config["token_file"]) as f:
-        token = f.read()
+    async def on_ready(self):
+        print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))
 
-    with open(json_config["personalities_file"]) as f:
-        personalities = json.load(f)
-
-    vince = Vince(bot, json_config, personalities)
-    bot.add_cog(vince)
-
-
-def run():
-    bot.run(token)
+    def run_from_config(self):
+        self.run(self.token)
