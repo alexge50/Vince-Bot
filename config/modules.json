@@ -1,0 +1,8 @@
+{
+  "active_modules": ["Main"],
+  "Main": {
+    "lib": "Modules.Main",
+    "class": "Main",
+    "config_file": ""
+  }
+}

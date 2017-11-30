@@ -3,7 +3,7 @@ from discord.ext import commands
 
 
 class Main:  # main cog
-    def __init__(self, bot):
+    def __init__(self, bot, config):
         self.bot = bot
 
     @commands.command(pass_context=True, no_pm=True)

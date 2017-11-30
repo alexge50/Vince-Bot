@@ -1,15 +1,14 @@
 import discord
 from discord.ext import commands
-
 import json
 
-import Modules.Main
+import modules
 
 
 class Vince(commands.Bot):
     def __init__(self, config_file, command_prefix, **options):
         super().__init__(command_prefix, **options)
-        self.modules = {}
+        self.modules = None
         self.token = None
         self.personalities = None
         self.current_personality = None
@@ -27,8 +26,10 @@ class Vince(commands.Bot):
         self.current_personality = json_config["initial_personality"]
         self.name = json_config["name"]
 
-        self.modules["MainModule"] = Modules.Main.Main(self)
-        self.add_cog(self.modules["MainModule"])
+        self.modules = modules.build_modules_list(self, json_config["modules_config_file"])
+
+        for (x, y) in self.modules.items():
+            self.add_cog(y)
 
     async def on_ready(self):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))
