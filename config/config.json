@@ -1,0 +1,8 @@
+{
+  "name": "Vince",
+  "token_file": "config/token",
+  "database_file": "TODO",
+  "personalities_file": "config/personalities.json",
+  "initial_personality": "normal",
+  "modules_config_file": "config/modules.json"
+}
