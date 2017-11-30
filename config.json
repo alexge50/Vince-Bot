@@ -2,5 +2,6 @@
   "name": "Vince",
   "token_file": "./token",
   "database_file": "TODO",
-  "personalities_file": "personalities.json"
+  "personalities_file": "personalities.json",
+  "initial_personality": "normal"
 }
