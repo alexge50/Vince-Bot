@@ -25,9 +25,13 @@ class BotInstance:  # this holds the properties, as well as properties for each 
             raise Exception("entry and config are None")
 
     def update(self):  # it update the database entry
-        new_entry = dict(serverid=self.serverid, current_personality="current_personality")
+        new_entry = dict(serverid=self.serverid, current_personality=self.current_personality)
         for(module_name, module_instance) in self.modules_instances.items():
             new_entry.update(module_instance.get_attributes())
+        self.owner.database.update_server_properties(self.serverid, new_entry)
+
+    def get_database_entry(self):
+        return self.owner.database.get_server_entry(self.serverid)
 
 
 class BotInstanceManager:
@@ -39,10 +43,16 @@ class BotInstanceManager:
         self.servers_table = {}
         self.database = database.Database(database_config)
 
+    def get_instance(self, serverid):
+        if serverid in self.servers_table:
+            return self.servers_table[serverid]
+        else:
+            raise Exception("server wasn't registered before")
+
     def new_instance(self, serverid):  # checks to see if the server was already registered, if not add it
-        if serverid is not self.servers_table:
+        if serverid not in self.servers_table:
             server_entry = self.database.get_server_entry(serverid)
-            if server_entry is not None: # init from entry
+            if server_entry is not None:  # init from entry
                 self.servers_table[server_entry["serverid"]] = BotInstance(self,
                                                                            server_entry["serverid"],
                                                                            self.module_instance_build_helpers,
