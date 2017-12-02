@@ -20,6 +20,9 @@ class Database:
     def get_servers_table(self):
         return self.database["servers"]
 
+    def get_server_entry(self, serverid):
+        return self.database["servers"].find_one(serverid=serverid)
+
 
 class FakeLock:
     def __init__(self):
