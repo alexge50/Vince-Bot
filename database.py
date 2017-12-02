@@ -14,7 +14,10 @@ class Database:
         with self.database as db:
             self.lock.acquire()
             properties["serverid"] = serverid
-            db["servers"].update(properties, ["serverid"])
+            if self.get_server_entry(serverid) is None:
+                db["servers"].insert(properties)
+            else:
+                db["servers"].update(properties, ["serverid"])
             self.lock.release()
 
     def get_servers_table(self):
