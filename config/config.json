@@ -1,7 +1,7 @@
 {
   "name": "Vince",
   "token_file": "config/token",
-  "database_file": "TODO",
+  "database": {"protocol": "sqlite:///data.db", "thread-lock": true},
   "personalities_file": "config/personalities.json",
   "initial_personality": "normal",
   "modules_config_file": "config/modules.json"
