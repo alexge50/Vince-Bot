@@ -25,6 +25,8 @@ def build_module_instance_list(modules_config):
     for module_name in modules_config["active_modules"]:
         module_instance_list[module_name] = build_module_instance(modules_config[module_name])
 
+    return module_instance_list
+
 
 def build_module_instance(module_config):
     if module_config["config_file"] is not "":
@@ -36,7 +38,7 @@ def build_module_instance(module_config):
     module_class = None
 
     exec("import {}".format(module_config["lib"]))
-    exec("module_class = {}.{}".format(module_config["lib"], module_config["instance_class"]))
+    module_class = eval("{}.{}".format(module_config["lib"], module_config["instance_class"]))
 
     return {"default_config": default_module_configuration, "class": module_class}
     # it returns the "settings" to build a module_instance of this kind

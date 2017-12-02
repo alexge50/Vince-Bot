@@ -7,10 +7,12 @@ import modules
 
 
 class BotInstance:  # this holds the properties, as well as properties for each module
-    def __init__(self, serverid, module_instance_build_helper,  entry=None, config=None): # inits itself using the entry
+    def __init__(self, owner, serverid, module_instance_build_helper,  entry=None, config=None):  # inits itself using the entry
+        self.owner = owner
         self.serverid = serverid
         self.modules_instances = {}
-        for (module_name, module_settings) in module_instance_build_helper.item(): # inits the modules
+
+        for (module_name, module_settings) in module_instance_build_helper.items():  # inits the modules
             self.modules_instances["module_name"] = module_settings["class"](self,
                                                                              entry=entry,
                                                                              config=module_settings["default_config"])
@@ -35,12 +37,14 @@ class BotInstanceManager:
     def new_instance(self, serverid):  # checks to see if the server was already registered, if not add it
         if serverid is not self.servers_table:
             server_entry = self.database.get_server_entry(serverid)
-            if server_entry  is not None: # init from entry
-                self.servers_table[server_entry["serverid"]] = BotInstance(server_entry["serverid"],
+            if server_entry is not None: # init from entry
+                self.servers_table[server_entry["serverid"]] = BotInstance(self,
+                                                                           server_entry["serverid"],
                                                                            self.module_instance_build_helpers,
                                                                            entry=server_entry)
             else:
-                self.servers_table[server_entry["serverid"]] = BotInstance(server_entry["serverid"],
-                                                                           self.module_instance_build_helpers,
-                                                                           config=self.server_config)
+                self.servers_table[serverid] = BotInstance(self,
+                                                           serverid,
+                                                           self.module_instance_build_helpers,
+                                                           config=self.server_config)
 
