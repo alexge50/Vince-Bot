@@ -13,9 +13,9 @@ class BotInstance:  # this holds the properties, as well as properties for each 
         self.modules_instances = {}
 
         for (module_name, module_settings) in module_instance_build_helper.items():  # inits the modules
-            self.modules_instances["module_name"] = module_settings["class"](self,
-                                                                             entry=entry,
-                                                                             config=module_settings["default_config"])
+            self.modules_instances[module_name] = module_settings["class"](self,
+                                                                           entry=entry,
+                                                                           config=module_settings["default_config"])
 
         if entry is not None:
             self.current_personality = entry["current_personality"]
@@ -23,6 +23,11 @@ class BotInstance:  # this holds the properties, as well as properties for each 
             self.current_personality = config["initial_personality"]
         else:
             raise Exception("entry and config are None")
+
+    def update(self):  # it update the database entry
+        new_entry = dict(serverid=self.serverid, current_personality="current_personality")
+        for(module_name, module_instance) in self.modules_instances.items():
+            new_entry.update(module_instance.get_attributes())
 
 
 class BotInstanceManager:
@@ -47,4 +52,5 @@ class BotInstanceManager:
                                                            serverid,
                                                            self.module_instance_build_helpers,
                                                            config=self.server_config)
+                self.servers_table[serverid].update()
 
