@@ -19,14 +19,11 @@ def build_module(bot_instance, module_config):
     return eval("{}.{}(bot_instance)".format(module_config["lib"], module_config["class"]))
 
 
-def build_module_instance_list(file):
-    with open(file, "r") as f:
-        config = json.load(f)
-
+def build_module_instance_list(modules_config):
     module_instance_list = {}
 
-    for module_name in config["active_modules"]:
-        module_instance_list[module_name] = build_module_instance(config[module_name])
+    for module_name in modules_config["active_modules"]:
+        module_instance_list[module_name] = build_module_instance(modules_config[module_name])
 
 
 def build_module_instance(module_config):
@@ -41,4 +38,5 @@ def build_module_instance(module_config):
     exec("import {}".format(module_config["lib"]))
     exec("module_class = {}.{}".format(module_config["lib"], module_config["instance_class"]))
 
-    return {"default_config": default_module_configuration, "class": module_class} # it returns the "settings" to build a module_instance of this kind
+    return {"default_config": default_module_configuration, "class": module_class}
+    # it returns the "settings" to build a module_instance of this kind
