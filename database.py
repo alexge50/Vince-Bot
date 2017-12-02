@@ -14,8 +14,11 @@ class Database:
         with self.database as db:
             self.lock.acquire()
             properties["serverid"] = serverid
-            db.update(properties, ["serverid"])
+            db["servers"].update(properties, ["serverid"])
             self.lock.release()
+
+    def get_servers_table(self):
+        return self.database["servers"]
 
 
 class FakeLock:
