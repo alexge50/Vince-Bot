@@ -9,7 +9,7 @@ import virtualbot
 class Vince(commands.Bot):
     def __init__(self, config_file, command_prefix, **options):
         super().__init__(command_prefix, **options)
-        self.modules = None
+        self.modules = []
         self.token = None
         self.personalities = None
         self.name = None
@@ -28,11 +28,13 @@ class Vince(commands.Bot):
 
         self.name = json_config["name"]
 
-        self.modules = modules.build_modules_list(self, json_config["modules_config_file"])
+        modules_constructors = modules.build_modules_list(json_config["modules_config_file"])
         self.instance_manager = virtualbot.BotInstanceManager(json_config["database"], modules_config, json_config)
 
-        for (x, y) in self.modules.items():
-            self.add_cog(y)
+        for (x, y) in modules_constructors.items():
+            module = y(self, modules_config[x]["resource"], None)
+            self.modules.append(module)
+            self.add_cog(module)
 
     async def on_ready(self):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))

@@ -1,22 +1,22 @@
 import json
 
 
-def build_modules_list(bot_instance, file):
+def build_modules_list(file):
     with open(file, "r") as f:
         config = json.load(f)
 
     modules_list = {}
 
     for module_name in config["active_modules"]:
-        modules_list[module_name] = build_module(bot_instance, config[module_name])
+        modules_list[module_name] = build_module(config[module_name])
 
     return modules_list
 
 
-def build_module(bot_instance, module_config):
+def build_module(module_config):
     exec("import {}".format(module_config["lib"]))
 
-    return eval("{}.{}(bot_instance)".format(module_config["lib"], module_config["class"]))
+    return eval("{}.{}".format(module_config["lib"], module_config["class"]))
 
 
 def build_module_instance_list(modules_config):

@@ -4,6 +4,7 @@
     "lib": "Modules.Main",
     "class": "Main",
     "instance_class": "MainInstance",
-    "config_file": ""
+    "config_file": "",
+    "resource": {"secret_file": "secret_text"}
   }
 }

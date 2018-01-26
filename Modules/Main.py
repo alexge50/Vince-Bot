@@ -3,8 +3,9 @@ from discord.ext import commands
 
 
 class Main:  # main cog
-    def __init__(self, bot):
+    def __init__(self, bot, resource, personality_data):
         self.bot = bot
+        self.resource = resource
 
     @commands.command(pass_context=True, no_pm=True)
     async def hi(self, ctx):
