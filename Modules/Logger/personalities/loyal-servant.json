@@ -1,0 +1,5 @@
+{
+  "Logger": {
+    "log_here": "Sir, the current channel to which I shall log has been changed to: <#{}>."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "Logger": {
+    "lib": "Logger",
+    "class": "Logger",
+    "instance_class": "LoggerInstance",
+    "resource": {},
+    "default_instance_config": {"log_channel": 0}
+  }
+}
