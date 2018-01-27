@@ -35,10 +35,6 @@ class Main:  # main cog
 
         await self.bot.say("```{}```".format(bot_instance.get_database_entry()))
 
-    async def on_message(self, message):
-        pass
-        #print(message)
-
 
 class MainInstance:  # hold the properties that this module needs
     def __init__(self, bot_instance, entry=None, config=None):

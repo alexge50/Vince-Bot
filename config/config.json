@@ -3,6 +3,6 @@
   "token_file": "config/token",
   "database": {"protocol": "sqlite:///data.db", "thread-lock": true},
   "personalities": {"active_personalities": ["loyal-servant", "normal", "gopnik"]},
-  "modules": {"active_modules": ["Main"], "modules_directory": "Modules"},
+  "modules": {"active_modules": ["Main", "Logger"], "modules_directory": "Modules"},
   "default_server_config": {"initial_personality": "normal"}
 }

@@ -98,8 +98,11 @@ class Vince(commands.Bot):
         self.instance_manager.new_instance(server.id)
 
     async def call_listeners_on_event(self, event_name, **kwargs):
+        print(self.event_listeners[event_name])
         for listener in self.event_listeners[event_name]:
-            await listener(kwargs)
+            print("calling listener")
+            print(kwargs)
+            #await listener(**kwargs)
 
     async def on_message(self, message):
         await self.call_listeners_on_event("on_message", message=message)
