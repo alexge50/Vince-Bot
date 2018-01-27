@@ -89,7 +89,7 @@ class Vince(commands.Bot):
 
     async def on_server_join(self, server):
         print("Bot was invited to {}".format(server.name))
-        self.self.instance_manager.new_instance(server.id)
+        self.instance_manager.new_instance(server.id)
 
     def run_from_config(self):
         self.run(self.token)
