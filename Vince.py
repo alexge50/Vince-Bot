@@ -1,8 +1,9 @@
-import discord
-from discord.ext import commands
 import json
 
-import virtualbot
+from discord.ext import commands
+
+from BotInstance.BotInstance import BotInstance
+from BotInstance.BotInstanceManager import BotInstanceManager
 
 
 def make_module_builders(module_config, modules_directory):
@@ -66,9 +67,9 @@ class Vince(commands.Bot):
             self.modules.append(module)
             self.add_cog(module)
 
-        self.instance_manager = virtualbot.BotInstanceManager(json_config["database"],
-                                                              module_instance_builders,
-                                                              json_config["default_server_config"])
+        self.instance_manager = BotInstanceManager(json_config["database"],
+                                                   module_instance_builders,
+                                                   json_config["default_server_config"])
 
     def load_personality(self, module_directory, module_name):
         module_personalities_data = {}
