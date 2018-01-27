@@ -1,5 +1,4 @@
 import database
-import modules
 
 # I call an instance a collection of properties, that are tied to a certain server
 # BotInstance - which hold the properties of the bot instance
@@ -7,15 +6,15 @@ import modules
 
 
 class BotInstance:  # this holds the properties, as well as properties for each module
-    def __init__(self, owner, serverid, module_instance_build_helper,  entry=None, config=None):  # inits itself using the entry
+    def __init__(self, owner, serverid, module_instance_builders,  entry=None, config=None):  # inits itself using the entry
         self.owner = owner
         self.serverid = serverid
         self.modules_instances = {}
 
-        for (module_name, module_settings) in module_instance_build_helper.items():  # inits the modules
-            self.modules_instances[module_name] = module_settings["class"](self,
-                                                                           entry=entry,
-                                                                           config=module_settings["default_config"])
+        for (module_name, (module_instance_class, module_instance_default_config)) in module_instance_builders.items():  # inits the modules
+            self.modules_instances[module_name] = module_instance_class(self,
+                                                                        entry=entry,
+                                                                        config=module_instance_default_config)
 
         if entry is not None:
             self.current_personality = entry["current_personality"]
@@ -35,10 +34,9 @@ class BotInstance:  # this holds the properties, as well as properties for each 
 
 
 class BotInstanceManager:
-    def __init__(self, database_config, modules_config, server_config):
-        self.modules_config = modules_config
-        self.server_config = server_config
-        self.module_instance_build_helpers = modules.build_module_instance_list(modules_config)
+    def __init__(self, database_config, module_instance_builders, default_server_config):
+        self.module_instance_builders = module_instance_builders
+        self.default_server_config = default_server_config
 
         self.servers_table = {}
         self.database = database.Database(database_config)
@@ -55,12 +53,12 @@ class BotInstanceManager:
             if server_entry is not None:  # init from entry
                 self.servers_table[server_entry["serverid"]] = BotInstance(self,
                                                                            server_entry["serverid"],
-                                                                           self.module_instance_build_helpers,
+                                                                           self.module_instance_builders,
                                                                            entry=server_entry)
             else:
                 self.servers_table[serverid] = BotInstance(self,
                                                            serverid,
-                                                           self.module_instance_build_helpers,
-                                                           config=self.server_config)
+                                                           self.module_instance_builders,
+                                                           config=self.default_server_config)
                 self.servers_table[serverid].update()
 
