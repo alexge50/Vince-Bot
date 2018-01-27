@@ -1,0 +1,9 @@
+{
+  "Main": {
+    "lib": "Main",
+    "class": "Main",
+    "instance_class": "MainInstance",
+    "resource": {"secret_file": "secret_text"},
+    "default_instance_config": {}
+  }
+}
