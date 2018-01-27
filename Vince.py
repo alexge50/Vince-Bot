@@ -2,8 +2,25 @@ import discord
 from discord.ext import commands
 import json
 
-import modules
 import virtualbot
+
+
+def make_module_builders(module_config, modules_directory):
+
+    lib = "{}.{}.{}".format(modules_directory,
+                            module_config["lib"],
+                            module_config["lib"])
+
+    exec("import {}".format(lib))
+
+    module_builder = eval("{}.{}".format(lib,
+                                         module_config["class"]))
+
+    module_instance_builder = (eval("{}.{}".format(lib,
+                                                   module_config["instance_class"])),
+                               module_config["default_instance_config"])
+
+    return module_builder, module_instance_builder
 
 
 class Vince(commands.Bot):
@@ -11,7 +28,8 @@ class Vince(commands.Bot):
         super().__init__(command_prefix, **options)
         self.modules = []
         self.token = None
-        self.personalities = None
+        self.personalities_data = {}
+        self.active_personalities = None
         self.name = None
 
         with open(config_file, "r") as f:
@@ -20,21 +38,47 @@ class Vince(commands.Bot):
         with open(json_config["token_file"]) as f:
             self.token = f.read()
 
-        with open(json_config["personalities_file"]) as f:
-            self.personalities = json.load(f)
-
-        with open(json_config["modules_config_file"]) as f:
-            modules_config = json.load(f)
-
         self.name = json_config["name"]
 
-        modules_constructors = modules.build_modules_list(json_config["modules_config_file"])
-        self.instance_manager = virtualbot.BotInstanceManager(json_config["database"], modules_config, json_config)
+        self.active_personalities = json_config["personalities"]["active_personalities"]
+        for personality_name in self.active_personalities:
+            self.personalities_data[personality_name] = {}
 
-        for (x, y) in modules_constructors.items():
-            module = y(self, modules_config[x]["resource"], None)
+        module_instance_builders = {}
+
+        for module_name in json_config["modules"]["active_modules"]:
+            module_directory = json_config["modules"]["modules_directory"] + "/" + module_name + "/"
+            module_config_file = module_directory + module_name + ".json"
+
+            with open(module_config_file) as f:
+                module_config = json.load(f)
+
+            (module_builder, module_instance_builder) = make_module_builders(module_config[module_name],
+                                                                             json_config["modules"]["modules_directory"]
+                                                                             )
+            module_personalities_data = self.load_personality(module_directory, module_name)
+            module = module_builder(self,
+                                    module_config[module_name]["resource"],
+                                    module_personalities_data)
+
+            module_instance_builders[module_name] = module_instance_builder
+
             self.modules.append(module)
             self.add_cog(module)
+
+        self.instance_manager = virtualbot.BotInstanceManager(json_config["database"],
+                                                              module_instance_builders,
+                                                              json_config["default_server_config"])
+
+    def load_personality(self, module_directory, module_name):
+        module_personalities_data = {}
+        for personality_name in self.active_personalities:
+            with open(module_directory + "personalities/" + personality_name + ".json") as f:
+                personality_data = json.load(f)
+            module_personalities_data[personality_name] = personality_data[module_name]
+            self.personalities_data[personality_name][module_name] = personality_data[module_name]
+
+        return module_personalities_data
 
     async def on_ready(self):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))
