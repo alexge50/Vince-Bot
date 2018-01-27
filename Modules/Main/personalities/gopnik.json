@@ -1,0 +1,9 @@
+{
+  "Main": {
+    "hi": "{} here, blyat.",
+    "change_personality": {
+      "ok": "Blyat, changed to {}",
+      "notok": "Pizdek, cant find {}"
+    }
+  }
+}
