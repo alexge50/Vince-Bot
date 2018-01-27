@@ -4,6 +4,7 @@
     "class": "Main",
     "instance_class": "MainInstance",
     "resource": {"secret_file": "secret_text"},
-    "default_instance_config": {}
+    "default_instance_config": {},
+    "listens_to": ["on_message"]
   }
 }

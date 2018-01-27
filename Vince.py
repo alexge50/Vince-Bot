@@ -7,7 +7,6 @@ from BotInstance.BotInstanceManager import BotInstanceManager
 
 
 def make_module_builders(module_config, modules_directory):
-
     lib = "{}.{}.{}".format(modules_directory,
                             module_config["lib"],
                             module_config["lib"])
@@ -32,6 +31,10 @@ class Vince(commands.Bot):
         self.personalities_data = {}
         self.active_personalities = None
         self.name = None
+        self.event_listeners = {}
+
+        for event_name in event_names:
+            self.event_listeners[event_name] = []
 
         with open(config_file, "r") as f:
             json_config = json.load(f)
@@ -64,6 +67,9 @@ class Vince(commands.Bot):
 
             module_instance_builders[module_name] = module_instance_builder
 
+            for event_name in module_config[module_name]["listens_to"]:
+                self.event_listeners[event_name].append(eval("module.{}".format(event_name)))
+
             self.modules.append(module)
             self.add_cog(module)
 
@@ -91,5 +97,76 @@ class Vince(commands.Bot):
         print("Bot was invited to {}".format(server.name))
         self.instance_manager.new_instance(server.id)
 
+    async def call_listeners_on_event(self, event_name, **kwargs):
+        for listener in self.event_listeners[event_name]:
+            await listener(kwargs)
+
+    async def on_message(self, message):
+        await self.call_listeners_on_event("on_message", message=message)
+        await self.process_commands(message)
+
+    async def on_message_deleted(self, message):
+        await self.call_listeners_on_event("on_message_deleted", message=message)
+
+    async def on_message_edit(self, before, after):
+        await self.call_listeners_on_event("on_message_edit", before=before, after=after)
+
+    async def on_reaction_add(self, reaction, user):
+        await self.call_listeners_on_event("on_reaction_add", reaction=reaction, user=user)
+
+    async def on_reaction_remove(self, reaction, user):
+        await self.call_listeners_on_event("on_reaction_remove", reaction=reaction, user=user)
+
+    async def on_reaction_clear(self, message, reactions):
+        await self.call_listeners_on_event("on_reaction_clear", message=message, reactions=reactions)
+
+    async def on_channel_delete(self, channel):
+        await self.call_listeners_on_event("on_channel_delete", channel=channel)
+
+    async def on_channel_create(self, channel):
+        await self.call_listeners_on_event("on_channel_create", channel=channel)
+
+    async def on_channel_update(self, before, after):
+        await self.call_listeners_on_event("on_channel_update", before=before, after=after)
+
+    async def on_member_join(self, member):
+        await self.call_listeners_on_event("on_member_join", member=member)
+
+    async def on_member_remove(self, member):
+        await self.call_listeners_on_event("on_member_remove", member=member)
+
+    async def on_member_update(self, before, after):
+        await self.call_listeners_on_event("on_member_update", before=before, after=after)
+
+    async def on_server_update(self, before, after):
+        await self.call_listeners_on_event("on_server_update", before=before, after=after)
+
+    async def on_server_role_create(self, role):
+        await self.call_listeners_on_event("on_server_role_create", role=role)
+
+    async def on_server_role_delete(self, role):
+        await self.call_listeners_on_event("on_server_role_delete", role=role)
+
+    async def on_server_role_update(self, before, after):
+        await self.call_listeners_on_event("on_server_role_update", before=before, after=after)
+
     def run_from_config(self):
         self.run(self.token)
+
+
+event_names = ["on_message",
+               "on_message_deleted",
+               "on_message_edit",
+               "on_reaction_add",
+               "on_reaction_remove",
+               "on_reaction_clear",
+               "on_channel_delete",
+               "on_channel_create",
+               "on_channel_update",
+               "on_member_join",
+               "on_member_remove",
+               "on_member_update",
+               "on_server_update",
+               "on_server_role_create",
+               "on_server_role_delete",
+               "on_server_role_update"]
