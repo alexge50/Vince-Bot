@@ -32,4 +32,4 @@ class BotInstanceManager:
                                                            serverid,
                                                            self.module_instance_builders,
                                                            config=self.default_server_config)
-                self.servers_table[serverid].update()
+            self.servers_table[serverid].update()
