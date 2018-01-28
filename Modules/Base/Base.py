@@ -30,7 +30,7 @@ class BaseInstance:
         self.bot_instance = bot_instance
         self.name = self.__class__.__name__
 
-        if self.name in entry:  # check if the module is registered in database entry
+        if entry is not None and self.name in entry:  # check if the module is registered in database entry
             self.init(entry)
         elif config is not None:
             self.init(config)
