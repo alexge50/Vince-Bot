@@ -24,12 +24,14 @@ class Logger(Base):  # main cog
             message_content = message.content
             message_content = message_content.replace("`", "'").replace("\n", "\n+ ")
 
-            await self.bot.send_message(log_channel,
-                                        "<@{}>, <#{}>:```diff\n+ {}```".format(
-                                            message.author.id,
-                                            message.channel.id,
-                                            message_content
-                                        ))
+            embed = discord.Embed(colour=discord.Colour(0x839827),
+                                  description="<@{}>, <#{}>: ```diff\n+ {}```".format(
+                                      message.author.id,
+                                      message.channel.id,
+                                      message_content
+                                  ))
+
+            await self.bot.send_message(destination=log_channel, embed=embed)
 
     async def on_message_delete(self, message):
         bot_instance = self.get_instance(message.channel.server.id)
@@ -41,12 +43,14 @@ class Logger(Base):  # main cog
             message_content = message.content
             message_content = message_content.replace("`", "'").replace("\n", "\n- ")
 
-            await self.bot.send_message(log_channel,
-                                        "<@{}>, <#{}>:```diff\n- {}```".format(
-                                            message.author.id,
-                                            message.channel.id,
-                                            message_content
-                                        ))
+            embed = discord.Embed(colour=discord.Colour(0xe53739),
+                                  description="<@{}>, <#{}>: ```diff\n- {}```".format(
+                                      message.author.id,
+                                      message.channel.id,
+                                      message_content
+                                  ))
+
+            await self.bot.send_message(destination=log_channel, embed=embed)
 
     async def on_message_edit(self, before, after):
         bot_instance = self.get_instance(before.channel.server.id)
@@ -60,13 +64,15 @@ class Logger(Base):  # main cog
             after_content = after.content
             after_content = after_content.replace("`", "'").replace("\n", "\n+ ")
 
-            await self.bot.send_message(log_channel,
-                                        "<@{}>, <#{}>:```diff\n- {}\n+ {}```".format(
+            embed = discord.Embed(colour=discord.Colour(0xb46830),
+                                  description="<@{}>, <#{}>:```diff\n- {}\n+ {}```".format(
                                             before.author.id,
                                             before.channel.id,
                                             before_content,
                                             after_content
                                         ))
+
+            await self.bot.send_message(destination=log_channel, embed=embed)
 
 
 class LoggerInstance(BaseInstance):
