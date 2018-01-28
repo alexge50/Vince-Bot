@@ -23,6 +23,8 @@ class BotInstance:
         else:
             raise Exception("entry and config are None")
 
+        self.update()  # update to keep data base in sync
+
     def update(self):  # it update the database entry
         new_entry = dict(serverid=self.serverid, current_personality=self.current_personality)
         for (module_name, module_instance) in self.modules_instances.items():
