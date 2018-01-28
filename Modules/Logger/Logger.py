@@ -71,11 +71,11 @@ class Logger(Base):  # main cog
 
 class LoggerInstance(BaseInstance):
     def __init__(self, bot_instance, entry=None, config=None):
-        super().__init__(bot_instance, entry, config)
         self.log_channel = None
+        super().__init__(bot_instance, entry, config)
 
     def init(self, config):
         self.log_channel = config["log_channel"]
 
     def convert_to_dictionary(self):
-        return dict(log_channel= self.log_channel)
+        return dict(log_channel=self.log_channel)
