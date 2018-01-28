@@ -16,9 +16,11 @@ def make_module_builders(module_config, modules_directory):
     module_builder = eval("{}.{}".format(lib,
                                          module_config["class"]))
 
+    module_config["default_instance_config"].update({module_config["instance_class"]: ""})
     module_instance_builder = (eval("{}.{}".format(lib,
                                                    module_config["instance_class"])),
-                               module_config["default_instance_config"])
+                               module_config["default_instance_config"]
+                               )
 
     return module_builder, module_instance_builder
 
