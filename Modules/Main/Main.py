@@ -7,20 +7,18 @@ class Main(Base):  # main cog
     @commands.command(pass_context=True, no_pm=True)
     async def hi(self, ctx):
         bot_instance = self.get_instance(ctx.message.channel.server.id)
-        await self.bot.say(self.personality_data[bot_instance.current_personality]["hi"].format(self.bot.name))
+        await self.bot.say(self.get_personality_data(bot_instance)["hi"].format(self.bot.name))
 
     @commands.command(pass_context=True, no_pm=True)
     async def change_personality(self, ctx, *, personality: str):
         bot_instance = self.get_instance(ctx.message.channel.server.id)
-        if personality in self.bot.personalities:
+        if personality in self.bot.active_personalities:
             bot_instance.current_personality = personality
             bot_instance.update()
             key = "ok"
         else:
             key = "notok"
-        await self.bot.say(
-            self.personality_data[bot_instance.current_personality]["change_personality"][key].format(
-                personality))
+        await self.bot.say(self.get_personality_data(bot_instance)["change_personality"][key].format(personality))
 
     @commands.command(pass_context=True, no_pm=True)
     async def gdbe(self, ctx):
