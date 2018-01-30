@@ -2,6 +2,9 @@
 base class for modules
 """
 
+import discord.ext.commands.context
+import discord.message
+
 
 class Base:
     def __init__(self, bot, resources, personality_data):
@@ -12,17 +15,34 @@ class Base:
         self.send_message = self.bot.send_message
         self.load_resources()
 
-    def get_instance(self, serverid):
+    def get_instance(self, *args):
+        serverid = None
+        if type(args[0]) is discord.ext.commands.context.Context:
+            serverid = self.get_id_from_context(args[0])
+        elif type(args[0]) is discord.Message:
+            serverid = self.get_id_from_message(args[0])
+        elif type(args[0]) == str:
+            serverid = args[0]
+
         return self.bot.instance_manager.get_instance(serverid)
 
     def load_resources(self):
         pass
 
-    def get_module(self, bot_instance, name):
-        return bot_instance.modules_instances[name]
-
     def get_personality_data(self, bot_instance):
         return self.personality_data[bot_instance.current_personality]
+
+    @staticmethod
+    def get_module(bot_instance, name):
+        return bot_instance.modules_instances[name]
+
+    @staticmethod
+    def get_id_from_context(ctx):
+        return ctx.message.channel.server.id
+
+    @staticmethod
+    def get_id_from_message(message):
+            return message.channel.server.id
 
 
 class BaseInstance:

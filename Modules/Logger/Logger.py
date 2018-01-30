@@ -6,7 +6,7 @@ from Modules.Base.Base import Base, BaseInstance
 class Logger(Base):  # main cog
     @commands.command(pass_context=True, no_pm=True)
     async def log_here(self, ctx):
-        bot_instance = self.get_instance(ctx.message.channel.server.id)
+        bot_instance = self.get_instance(ctx)
         logger_instance = self.get_module(bot_instance, "Logger")
         logger_instance.log_channel = ctx.message.channel.id
         bot_instance.update()
@@ -15,7 +15,7 @@ class Logger(Base):  # main cog
             self.get_personality_data(bot_instance)["log_here"].format(ctx.message.channel.id))
 
     async def on_message(self, message):
-        bot_instance = self.get_instance(message.channel.server.id)
+        bot_instance = self.get_instance(message)
         logger_instance = self.get_module(bot_instance, "Logger")
 
         if logger_instance.log_channel is not None and (message.channel.id != logger_instance.log_channel):
@@ -34,7 +34,7 @@ class Logger(Base):  # main cog
             await self.bot.send_message(destination=log_channel, embed=embed)
 
     async def on_message_delete(self, message):
-        bot_instance = self.get_instance(message.channel.server.id)
+        bot_instance = self.get_instance(message)
         logger_instance = self.get_module(bot_instance, "Logger")
 
         if logger_instance.log_channel is not None and message.channel.id != logger_instance.log_channel:
@@ -53,7 +53,7 @@ class Logger(Base):  # main cog
             await self.bot.send_message(destination=log_channel, embed=embed)
 
     async def on_message_edit(self, before, after):
-        bot_instance = self.get_instance(before.channel.server.id)
+        bot_instance = self.get_instance(before)
         logger_instance = self.get_module(bot_instance, "Logger")
 
         if logger_instance.log_channel is not None and before.channel.id != logger_instance.log_channel:
