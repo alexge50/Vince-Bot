@@ -1,6 +1,9 @@
+import traceback
+
 import json
 
 from discord.ext import commands
+import discord
 
 from BotInstance.BotInstance import BotInstance
 from BotInstance.BotInstanceManager import BotInstanceManager
@@ -86,6 +89,7 @@ class Vince(commands.Bot):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))
 
         for server in self.servers:
+            print("server: {}, {}".format(server.name, server.id))
             self.instance_manager.new_instance(server.id)
 
     async def on_server_join(self, server):
@@ -94,6 +98,10 @@ class Vince(commands.Bot):
 
     async def on_message(self, message):
         await self.process_commands(message)
+
+    async def on_error(self, event,  *args, **kwargs):
+        print("here")
+        #await self.send_message(self.get_channel('407261193745465348'), "```\n{}```".format(traceback.format_exc()))
 
     def run_from_config(self):
         self.run(self.token)
