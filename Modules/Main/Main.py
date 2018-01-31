@@ -26,6 +26,10 @@ class Main(Base):  # main cog
 
         await self.bot.say("```{}```".format(bot_instance.get_database_entry()))
 
+    @commands.command()
+    async def raiseerror(self):
+        raise Exception("raiseerror called")
+
 
 class MainInstance(BaseInstance):  # hold the properties that this module needs
     def convert_to_dictionary(self):
