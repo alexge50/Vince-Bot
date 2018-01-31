@@ -11,7 +11,7 @@ class Logger(Base):  # main cog
         logger_instance.log_channel = ctx.message.channel.id
         bot_instance.update()
 
-        await self.bot.say(
+        await self.say(
             self.get_personality_data(bot_instance)["log_here"].format(ctx.message.channel.id))
 
     async def on_message(self, message):
@@ -31,7 +31,7 @@ class Logger(Base):  # main cog
                                       message_content
                                   ))
 
-            await self.bot.send_message(destination=log_channel, embed=embed)
+            await self.send_message(destination=log_channel, embed=embed)
 
     async def on_message_delete(self, message):
         bot_instance = self.get_instance(message)
@@ -50,7 +50,7 @@ class Logger(Base):  # main cog
                                       message_content
                                   ))
 
-            await self.bot.send_message(destination=log_channel, embed=embed)
+            await self.send_message(destination=log_channel, embed=embed)
 
     async def on_message_edit(self, before, after):
         bot_instance = self.get_instance(before)
@@ -72,7 +72,7 @@ class Logger(Base):  # main cog
                                             after_content
                                         ))
 
-            await self.bot.send_message(destination=log_channel, embed=embed)
+            await self.send_message(destination=log_channel, embed=embed)
 
 
 class LoggerInstance(BaseInstance):

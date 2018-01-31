@@ -12,8 +12,19 @@ class Base:
         self.resources = resources
         self.personality_data = personality_data
 
-        self.send_message = self.bot.send_message
         self.load_resources()
+
+    async def send_message(self, *args, **kwargs):
+        try:
+            await self.bot.send_message(*args, **kwargs)
+        except discord.errors.Forbidden:
+            print("Unable to send message")
+
+    async def say(self, *args, **kwargs):
+        try:
+            await self.bot.say(*args, **kwargs)
+        except discord.errors.Forbidden:
+            print("Unable to send message")
 
     def get_instance(self, *args):
         serverid = None
