@@ -1,5 +1,5 @@
 {
   "Logger": {
-    "log_here": "Blinn. log here <#{}>, blyat."
+    "setlogchannel": "Blinn. logging here <#{}>, blyat."
   }
 }

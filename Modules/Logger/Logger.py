@@ -5,14 +5,14 @@ from Modules.Base.Base import Base, BaseInstance
 
 class Logger(Base):  # main cog
     @commands.command(pass_context=True, no_pm=True)
-    async def log_here(self, ctx):
+    async def setlogchannel(self, ctx):
         bot_instance = self.get_instance(ctx)
         logger_instance = self.get_module(bot_instance, "Logger")
         logger_instance.log_channel = ctx.message.channel.id
         bot_instance.update()
 
         await self.say(
-            self.get_personality_data(bot_instance)["log_here"].format(ctx.message.channel.id))
+            self.get_personality_data(bot_instance)["setlogchannel"].format(ctx.message.channel.id))
 
     async def on_message(self, message):
         bot_instance = self.get_instance(message)

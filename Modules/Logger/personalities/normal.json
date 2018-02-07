@@ -1,5 +1,5 @@
 {
   "Logger": {
-    "log_here": "<#{}> has been set as the current channel for logging."
+    "setlogchannel": "<#{}> has been set as the current channel for logging."
   }
 }
