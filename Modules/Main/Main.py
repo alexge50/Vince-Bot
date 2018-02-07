@@ -10,7 +10,7 @@ class Main(Base):  # main cog
         await self.bot.say(self.get_personality_data(bot_instance)["hi"].format(self.bot.name))
 
     @commands.command(pass_context=True, no_pm=True)
-    async def change_personality(self, ctx, *, personality: str):
+    async def changepersonality(self, ctx, *, personality: str):
         bot_instance = self.get_instance(ctx)
         if personality in self.bot.active_personalities:
             bot_instance.current_personality = personality
@@ -18,7 +18,7 @@ class Main(Base):  # main cog
             key = "ok"
         else:
             key = "notok"
-        await self.bot.say(self.get_personality_data(bot_instance)["change_personality"][key].format(personality))
+        await self.bot.say(self.get_personality_data(bot_instance)["changepersonality"][key].format(personality))
 
     @commands.command(pass_context=True, no_pm=True)
     async def gdbe(self, ctx):
