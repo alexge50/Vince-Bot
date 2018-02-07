@@ -75,6 +75,9 @@ class Vince(commands.Bot):
                                                    module_instance_builders,
                                                    json_config["default_server_config"])
 
+        self.remove_command("help")
+        self.add_command(self.help)
+
     def load_personality(self, module_directory, module_name):
         module_personalities_data = {}
         for personality_name in self.active_personalities:
@@ -99,9 +102,25 @@ class Vince(commands.Bot):
     async def on_message(self, message):
         await self.process_commands(message)
 
-    async def on_error(self, event,  *args, **kwargs):
+    async def on_error(self, event, *args, **kwargs):
         print("here")
-        #await self.send_message(self.get_channel('407261193745465348'), "```\n{}```".format(traceback.format_exc()))
+        # await self.send_message(self.get_channel('407261193745465348'), "```\n{}```".format(traceback.format_exc()))
+
+    @commands.command(pass_context=True, no_pm=True)
+    async def help(self, ctx):
+        message = ""
+        message += "```cpp \n\"{}'s commands list\"```\n".format(self.name)
+        for module in self.modules:
+            (module_info, command_info) = module.help()
+            module_name = module.name
+            message += "**{}**: {}\n".format(module_name, module_info)
+
+            message += "```\n"
+            for(command_name, command_description) in command_info.items():
+                message += "{} - {}\n".format(command_name, command_description)
+            message += "```\n"
+
+        await self.send_message(ctx.message.channel, message)
 
     def run_from_config(self):
         self.run(self.token)

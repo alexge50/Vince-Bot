@@ -74,6 +74,11 @@ class Logger(Base):  # main cog
 
             await self.send_message(destination=log_channel, embed=embed)
 
+    def help(self):
+        return "Logger is a module that logs message creation, deletion and changing events.", {
+                "setlogchannel": "It sets the channel from which was invoked as the log channel. \
+                                  It requires Manage Server permissions."}
+
 
 class LoggerInstance(BaseInstance):
     def __init__(self, bot_instance, entry=None, config=None):

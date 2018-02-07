@@ -30,6 +30,12 @@ class Main(Base):  # main cog
     async def raiseerror(self):
         raise Exception("raiseerror called")
 
+    def help(self):
+        return "Main is a module with default commands.", \
+               {"hi": "Acts like a ping. Displays a salute message",
+                "changepersonality": "This is command changes the personality with which the bot will \
+                                      act in the current server. It requires Manage Server permissions."}
+
 
 class MainInstance(BaseInstance):  # hold the properties that this module needs
     def convert_to_dictionary(self):

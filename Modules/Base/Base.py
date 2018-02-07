@@ -9,6 +9,7 @@ import discord.message
 class Base:
     def __init__(self, bot, resources, personality_data):
         self.bot = bot
+        self.name = self.__class__.__name__
         self.resources = resources
         self.personality_data = personality_data
 
@@ -42,6 +43,9 @@ class Base:
 
     def get_personality_data(self, bot_instance):
         return self.personality_data[bot_instance.current_personality]
+
+    def help(self):
+        return "", {}
 
     @staticmethod
     def get_module(bot_instance, name):
