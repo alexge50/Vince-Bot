@@ -109,7 +109,7 @@ class Vince(commands.Bot):
     @commands.command(pass_context=True, no_pm=True)
     async def help(self, ctx):
         message = ""
-        message += "```cpp \n\"{}'s commands list\"```\n".format(self.name)
+        message += "```cpp\n\"{}'s commands list\"```\n".format(self.name)
         for module in self.modules:
             (module_info, command_info) = module.help()
             module_name = module.name
