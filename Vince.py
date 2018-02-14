@@ -64,6 +64,7 @@ class Vince(commands.Bot):
             module_personalities_data = self.load_personality(module_directory, module_name)
             module = module_builder(self,
                                     module_config[module_name]["resource"],
+                                    module_config[module_name]["permissions"],
                                     module_personalities_data)
 
             module_instance_builders[module_name] = module_instance_builder
