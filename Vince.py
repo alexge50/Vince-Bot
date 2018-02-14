@@ -92,7 +92,6 @@ class Vince(commands.Bot):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))
 
         for server in self.servers:
-            print("server: {}, {}".format(server.name, server.id))
             self.instance_manager.new_instance(server.id)
 
     async def on_server_join(self, server):
