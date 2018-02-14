@@ -5,6 +5,8 @@ base class for modules
 import discord.ext.commands.context
 import discord.message
 
+import inspect
+
 
 class Base:
     def __init__(self, bot, resources, personality_data):
@@ -42,7 +44,11 @@ class Base:
         pass
 
     def get_personality_data(self, bot_instance):
-        return self.personality_data[bot_instance.current_personality]
+        current_frame = inspect.currentframe()
+        caller_frame = inspect.getouterframes(current_frame, 2)
+        caller_name = caller_frame[1][3]
+
+        return self.personality_data[bot_instance.current_personality][caller_name]
 
     def help(self):
         return "", {}
