@@ -12,7 +12,7 @@ class Logger(Base):  # main cog
         bot_instance.update()
 
         await self.say(
-            self.get_personality_data(bot_instance)["setlogchannel"].format(ctx.message.channel.id))
+            self.get_personality_data(bot_instance).format(ctx.message.channel.id))
 
     async def on_message(self, message):
         bot_instance = self.get_instance(message)

@@ -7,7 +7,7 @@ class Main(Base):  # main cog
     @commands.command(pass_context=True, no_pm=True)
     async def hi(self, ctx):
         bot_instance = self.get_instance(ctx)
-        await self.bot.say(self.get_personality_data(bot_instance)["hi"].format(self.bot.name))
+        await self.bot.say(self.get_personality_data(bot_instance).format(self.bot.name))
 
     @commands.command(pass_context=True, no_pm=True)
     async def changepersonality(self, ctx, *, personality: str):
@@ -18,7 +18,7 @@ class Main(Base):  # main cog
             key = "ok"
         else:
             key = "notok"
-        await self.bot.say(self.get_personality_data(bot_instance)["changepersonality"][key].format(personality))
+        await self.bot.say(self.get_personality_data(bot_instance)[key].format(personality))
 
     @commands.command(pass_context=True, no_pm=True)
     async def gdbe(self, ctx):
