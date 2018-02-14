@@ -51,6 +51,8 @@ class Vince(commands.Bot):
 
         module_instance_builders = {}
 
+        global_personalities_data = self.load_personality_global(json_config["personalities"]["global"]["location"])
+
         for module_name in json_config["modules"]["active_modules"]:
             module_directory = json_config["modules"]["modules_directory"] + "/" + module_name + "/"
             module_config_file = module_directory + module_name + ".json"
@@ -65,7 +67,8 @@ class Vince(commands.Bot):
             module = module_builder(self,
                                     module_config[module_name]["resource"],
                                     module_config[module_name]["permissions"],
-                                    module_personalities_data)
+                                    module_personalities_data,
+                                    global_personalities_data)
 
             module_instance_builders[module_name] = module_instance_builder
 
@@ -88,6 +91,16 @@ class Vince(commands.Bot):
             self.personalities_data[personality_name][module_name] = personality_data[module_name]
 
         return module_personalities_data
+
+    def load_personality_global(self, directory):
+        personalities_data = {}
+        for personality_name in self.active_personalities:
+            with open(directory + "/" + personality_name + ".json") as f:
+                personality_data = json.load(f)
+                personalities_data[personality_name] = personality_data["global"]
+            self.personalities_data[personality_name]["global"] = personality_data["global"]
+
+        return personalities_data
 
     async def on_ready(self):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))

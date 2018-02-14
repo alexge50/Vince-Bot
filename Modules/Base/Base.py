@@ -12,12 +12,13 @@ import inspect
 
 
 class Base:
-    def __init__(self, bot, resources, permissions, personality_data):
+    def __init__(self, bot, resources, permissions, personality_data, global_personality_data):
         self.bot = bot
         self.name = self.__class__.__name__
         self.resources = resources
         self.permissions = permissions
         self.personality_data = personality_data
+        self.global_personality_data = global_personality_data
 
         self.load_resources()
 
@@ -47,12 +48,15 @@ class Base:
     def load_resources(self):
         pass
 
-    def get_personality_data(self, bot_instance):
-        current_frame = inspect.currentframe()
-        caller_frame = inspect.getouterframes(current_frame, 2)
-        caller_name = caller_frame[1][3]
+    def get_personality_data(self, bot_instance, is_global=False, message_name=None):
+        if is_global:
+            return self.global_personality_data[bot_instance.current_personality][message_name]
+        else:
+            current_frame = inspect.currentframe()
+            caller_frame = inspect.getouterframes(current_frame, 2)
+            caller_name = caller_frame[1][3]
 
-        return self.personality_data[bot_instance.current_personality][caller_name]
+            return self.personality_data[bot_instance.current_personality][caller_name]
 
     def check_permissions(self, ctx: discord.ext.commands.context.Context):
         current_frame = inspect.currentframe()
@@ -63,7 +67,7 @@ class Base:
         user = ctx.message.author
         channel = ctx.message.channel
 
-        return Base.check_required_permissions(user, ctx.message.channel, permissions)
+        return Base.check_required_permissions(user, channel, permissions)
 
     async def print_unmet_permissions_error(self, ctx):
         current_frame = inspect.currentframe()
@@ -77,7 +81,11 @@ class Base:
         unmet_permissions = Base.get_unmet_permissions(user, channel, permissions)
 
         if "alexge50" not in unmet_permissions:
-            await self.send_message(channel, "User does not meet required permissions: {}".format(Base.list_to_string(unmet_permissions)))
+            await self.send_message(channel,
+                                    self.get_personality_data(self.get_instance(ctx),
+                                                              is_global=True,
+                                                              message_name="permissions_not_met").format(
+                                        Base.list_to_string(unmet_permissions)))
 
     @staticmethod
     def list_to_string(l: list):
@@ -136,7 +144,6 @@ class Base:
                                        "manage nicknames": user_permissions.manage_nicknames,
                                        "manage roles": user_permissions.manage_roles}
         return user_permissions_dictionary
-
 
     @staticmethod
     def get_module(bot_instance, name):
