@@ -47,15 +47,12 @@ class Base:
     def load_resources(self):
         pass
 
-    def get_personality_data(self, bot_instance, is_global=True, message_name=None):
-        if is_global:
-            return self.personality_data[bot_instance.current_personality][message_name]
-        else:
-            current_frame = inspect.currentframe()
-            caller_frame = inspect.getouterframes(current_frame, 2)
-            caller_name = caller_frame[1][3]
+    def get_personality_data(self, bot_instance):
+        current_frame = inspect.currentframe()
+        caller_frame = inspect.getouterframes(current_frame, 2)
+        caller_name = caller_frame[1][3]
 
-            return self.personality_data[bot_instance.current_personality][caller_name]
+        return self.personality_data[bot_instance.current_personality][caller_name]
 
     def check_permissions(self, ctx: discord.ext.commands.context.Context):
         current_frame = inspect.currentframe()
@@ -67,6 +64,46 @@ class Base:
         channel = ctx.message.channel
 
         return Base.check_required_permissions(user, ctx.message.channel, permissions)
+
+    async def print_unmet_permissions_error(self, ctx):
+        current_frame = inspect.currentframe()
+        caller_frame = inspect.getouterframes(current_frame, 2)
+        caller_name = caller_frame[1][3]
+
+        permissions = self.permissions[caller_name]
+        user = ctx.message.author
+        channel = ctx.message.channel
+
+        unmet_permissions = Base.get_unmet_permissions(user, channel, permissions)
+
+        if "alexge50" not in unmet_permissions:
+            await self.send_message(channel, "User does not meet required permissions: {}".format(Base.list_to_string(unmet_permissions)))
+
+    @staticmethod
+    def list_to_string(l: list):
+        result = "{}".format(l[0])
+        l.remove(l[0])
+        for x in l:
+            result = result + ", " + "{}".format(x)
+
+        return result
+
+    @staticmethod
+    def get_unmet_permissions(user: User, channel: Channel, permissions_required: list):
+        user_permissions = channel.permissions_for(user)
+        user_permissions_dictionary = Base.build_permissions_dictionary(user_permissions)
+
+        unmet_permissions = []
+
+        for permission in permissions_required:
+            if permission == "alexge50":
+                if user.id != "304170392375787520":
+                    unmet_permissions.append(permission)
+            else:
+                if not user_permissions_dictionary[permission]:
+                    unmet_permissions.append(permission)
+
+        return unmet_permissions
 
     @staticmethod
     def check_required_permissions(user: User, channel: Channel, permissions_required: list):

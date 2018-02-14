@@ -10,7 +10,7 @@ class Main(Base):  # main cog
             bot_instance = self.get_instance(ctx)
             await self.bot.say(self.get_personality_data(bot_instance).format(self.bot.name))
         else:
-            await self.bot.say("User does not meet required permissions")
+            await self.print_unmet_permissions_error(ctx)
 
     @commands.command(pass_context=True, no_pm=True)
     async def changepersonality(self, ctx, *, personality: str):
@@ -24,7 +24,7 @@ class Main(Base):  # main cog
                 key = "notok"
             await self.bot.say(self.get_personality_data(bot_instance)[key].format(personality))
         else:
-            await self.bot.say("User does not meet required permissions")
+            await self.print_unmet_permissions_error(ctx)
 
     @commands.command(pass_context=True, no_pm=True)
     async def gdbe(self, ctx):
@@ -32,6 +32,8 @@ class Main(Base):  # main cog
             bot_instance = self.get_instance(ctx)
 
             await self.bot.say("```{}```".format(bot_instance.get_database_entry()))
+        else:
+            await self.print_unmet_permissions_error(ctx)
 
     @commands.command()
     async def raiseerror(self):

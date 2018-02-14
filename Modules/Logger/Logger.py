@@ -15,7 +15,7 @@ class Logger(Base):  # main cog
             await self.say(
                 self.get_personality_data(bot_instance).format(ctx.message.channel.id))
         else:
-            await self.bot.say("User does not meet required permissions")
+            await self.print_unmet_permissions_error(ctx)
 
     async def on_message(self, message):
         bot_instance = self.get_instance(message)
