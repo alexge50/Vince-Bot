@@ -1,8 +1,4 @@
 {
   "name": "Vince",
-  "token_file": "config/token",
-  "database": {"protocol": "sqlite:///resources/data.db", "thread-lock": true},
-  "personalities": {"active_personalities": ["loyal-servant", "normal", "gopnik"], "global": {"location": "resources/global_personalities"}},
-  "modules": {"active_modules": ["Main", "Logger"], "modules_directory": "Modules"},
-  "default_server_config": {"initial_personality": "normal"}
+  "token_file": "config/token"
 }

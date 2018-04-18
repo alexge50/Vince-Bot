@@ -1,9 +1,0 @@
-{
-  "Main": {
-    "hi": "Hi, I am {}, nice to meet you!",
-    "changepersonality": {
-      "ok": "Personality changed to {}",
-      "notok": "Couldn't find {}"
-    }
-  }
-}

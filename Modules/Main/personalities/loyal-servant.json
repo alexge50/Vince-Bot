@@ -1,9 +1,0 @@
-{
-  "Main": {
-    "hi": "Good evening, sir. {} on duty, to serve your highness's needs.",
-    "changepersonality": {
-      "ok": "Sir, current personality was changed to {}.",
-      "notok": "Sir, {} was not found as being one of the options."
-    }
-  }
-}
