@@ -5,19 +5,16 @@ import json
 from discord.ext import commands
 import discord
 
-
+from Framework import util
 
 class Vince(commands.Bot):
     def __init__(self, config_file, command_prefix, **options):
         super().__init__(command_prefix, **options)
         self.token = None
 
-        with open(config_file, "r") as f:
-            config = json.load(f)
-
+        config = util.load_json_file(config_file)
         # token
-        with open(config["token_file"], "r") as f:
-            self.token = f.read()
+        self.token = util.load_file(config["token_file"])
 
     def run(self):
         super().run(self.token)
