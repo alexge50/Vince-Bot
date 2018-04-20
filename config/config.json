@@ -1,4 +1,6 @@
 {
   "name": "Vince",
-  "token_file": "config/token"
+  "token_file": "config/token",
+  "database": "sqlite:///resources/data.db",
+  "modules_directory": "Modules/"
 }
