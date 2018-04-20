@@ -2,7 +2,7 @@
   "name": "Main",
   "lib": "Main",
   "class": "Main",
-  "default_config": "",
+  "default_properties": "",
   "resources": "",
   "permissions": ""
 }
