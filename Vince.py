@@ -12,7 +12,7 @@ class Vince(commands.Bot):
         super().__init__(command_prefix, **options)
         self.token = None
         self.database = None
-        self.manager = BotInstanceManager(self)
+        self.manager = None
         self.module_builders = None
         self.modules = {}
 
@@ -22,9 +22,16 @@ class Vince(commands.Bot):
         self.module_builders = Module.make_module_builder_list(config['modules_directory'])  # module builders
 
         # create instances of modules
+        default_properties = {}
         for module_builder in self.module_builders:
             self.modules[module_builder.name] = Module.new_instance(module_builder, self)
             self.add_cog(self.modules[module_builder.name])
+
+            default_properties[module_builder.name] = module_builder.default_properties \
+                if module_builder.default_properties != "" \
+                else {}
+
+        self.manager = BotInstanceManager(self, default_properties)
 
     def run(self):
         super().run(self.token)
@@ -32,8 +39,12 @@ class Vince(commands.Bot):
     async def on_ready(self):
         print('Logged in as:\n{0} (ID: {0.id})'.format(self.user))
 
+        for server in self.servers:
+            self.manager.add_instance(server.id)
+
     async def on_server_join(self, server):
         print("Bot was invited to {}".format(server.name))
+        self.manager.add_instance(server.id)
 
     async def on_message(self, message):
         await self.process_commands(message)
