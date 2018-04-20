@@ -1,7 +1,7 @@
 from collections import namedtuple
 from Framework import util
 
-ModuleBuilder = namedtuple('ModuleBuilder', 'name class_name default_config resources permissions')
+ModuleBuilder = namedtuple('ModuleBuilder', 'name class_name default_properties resources permissions')
 
 
 def load_module_builder(json_module, directory):  # creates a ModuleBuilder
@@ -17,7 +17,7 @@ def load_module_builder(json_module, directory):  # creates a ModuleBuilder
 
     return ModuleBuilder(json_module['name'],
                          module_class,
-                         json_module['default_config'],
+                         json_module['default_properties'],
                          json_module['resources'],
                          json_module['permissions'])
 
