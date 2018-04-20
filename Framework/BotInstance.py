@@ -17,15 +17,20 @@ class BotInstanceManager:
         self.instances[serverid] = BotInstance(self, serverid)
 
     def database_lookup(self, table, id):  # looks into database's table, for the object with a certain id
+        table = table + 'table_'
         return self.bot.database[table].find_one(_id=id)
 
     def database_update(self, table, id, data):  # updates row
+        table = table + 'table_'
         data['_id'] = id
         with self.bot.database as db:
             if db[table].find_one(_id=id) is None:
                 db[table].insert(data)
             else:
                 db[table].update(data, ['_id'])
+
+    def get_instance(self, serverid):
+        return self.instances[serverid]
 
 
 class BotInstance:
@@ -36,8 +41,8 @@ class BotInstance:
     def get_field(self, module_name, field_name):
         data = self.owner.database_lookup(module_name, self.serverid)
 
-        assert data is None
-        assert field_name not in data
+        assert data is not None
+        assert field_name in data
 
         return data[field_name]
 
