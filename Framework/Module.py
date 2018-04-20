@@ -5,9 +5,9 @@ ModuleBuilder = namedtuple('ModuleBuilder', 'name class_name default_config reso
 
 
 def load_module_builder(json_module, directory):  # creates a ModuleBuilder
-    lib_name = "{}.{}.{}".format(directory,
-                                 json_module['name'],
-                                 json_module['lib'])
+    lib_name = "{}.{}".format(directory,
+                              json_module['name'],
+                              json_module['lib'])
     lib_path = "{}/{}/{}.py".format(directory,
                                     json_module['name'],
                                     json_module['lib'])
