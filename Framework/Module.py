@@ -1,6 +1,9 @@
 from collections import namedtuple
 from Framework import util
 
+import discord
+import discord.ext.commands.context
+
 ModuleBuilder = namedtuple('ModuleBuilder', 'name class_name default_properties resources permissions')
 
 
@@ -34,4 +37,35 @@ def make_module_builder_list(module_directory):
 
 
 def new_instance(module_builder: ModuleBuilder, bot):
-    return module_builder.class_name(bot)
+    return module_builder.class_name(bot, module_builder.name, module_builder.permissions)
+
+
+class ModuleBase:
+    def __init__(self, bot, module_name, permissions):
+        self.bot = bot
+        self.name = module_name
+        self.permissions = permissions
+
+    async def send_message(self, *args, **kwargs):
+        try:
+            await self.bot.send_message(*args, **kwargs)
+        except discord.errors.Forbidden:
+            print("Unable to send message")
+
+    async def say(self, *args, **kwargs):
+        try:
+            await self.bot.say(*args, **kwargs)
+        except discord.errors.Forbidden:
+            print("Unable to send message")
+
+    def get_instance(self, arg):
+        serverid = None
+
+        if type(arg) is discord.ext.commands.context.Context:
+            serverid = arg.message.channel.server.id
+        elif type(arg) is discord.Message:
+            serverid = arg.channel.server.id
+        elif type(arg) is str:
+            serverid = arg
+
+        return self.bot.manager.get_instance(serverid)
