@@ -1,4 +1,5 @@
 import json
+import importlib.util
 
 
 def load_json_file(filename):
@@ -13,5 +14,9 @@ def load_file(filename):
     return content
 
 
-def import_lib(lib: str):
-    exec("import {}".format(lib))
+def import_lib(lib: str, path):
+    spec = importlib.util.spec_from_file_location(lib, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    return module
