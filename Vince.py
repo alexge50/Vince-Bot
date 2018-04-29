@@ -3,6 +3,8 @@ import discord
 
 from Framework import util, Module
 from Framework.BotInstance import *
+from Framework.Permission import *
+
 
 import dataset
 
@@ -23,6 +25,7 @@ class Vince(commands.Bot):
 
         # create instances of modules
         default_properties = {}
+        naked_permission_required = {}
         for module_builder in self.module_builders:
             self.modules[module_builder.name] = Module.new_instance(module_builder, self)
             self.add_cog(self.modules[module_builder.name])
@@ -31,7 +34,10 @@ class Vince(commands.Bot):
                 if module_builder.default_properties != "" \
                 else {}
 
+            naked_permission_required.update(module_builder.permissions)
+
         self.manager = BotInstanceManager(self, default_properties)
+        self.permissions_manager = PermissionManager(self, naked_permission_required, None)
 
     def run(self):
         super().run(self.token)

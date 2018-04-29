@@ -39,14 +39,13 @@ def make_module_builder_list(module_directory):
 
 
 def new_instance(module_builder: ModuleBuilder, bot):
-    return module_builder.class_name(bot, module_builder.name, module_builder.permissions)
+    return module_builder.class_name(bot, module_builder.name)
 
 
 class ModuleBase:
-    def __init__(self, bot, module_name, permissions):
+    def __init__(self, bot, module_name):
         self.bot = bot
         self.name = module_name
-        self.permissions = permissions
 
     async def send_message(self, *args, **kwargs):
         try:
