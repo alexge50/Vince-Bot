@@ -17,11 +17,11 @@ class BotInstanceManager:
         self.instances[serverid] = BotInstance(self, serverid)
 
     def database_lookup(self, table, id):  # looks into database's table, for the object with a certain id
-        table = table + 'table_'
+        table = 'table_' + table
         return self.bot.database[table].find_one(_id=id)
 
     def database_update(self, table, id, data):  # updates row
-        table = table + 'table_'
+        table = 'table_' + table
         data['_id'] = id
         with self.bot.database as db:
             if db[table].find_one(_id=id) is None:
