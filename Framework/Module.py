@@ -4,6 +4,8 @@ from Framework import util
 import discord
 import discord.ext.commands.context
 
+import inspect
+
 ModuleBuilder = namedtuple('ModuleBuilder', 'name class_name default_properties resources permissions')
 
 
@@ -58,14 +60,14 @@ class ModuleBase:
         except discord.errors.Forbidden:
             print("Unable to send message")
 
-    def get_instance(self, arg):
-        serverid = None
-
-        if type(arg) is discord.ext.commands.context.Context:
-            serverid = arg.message.channel.server.id
-        elif type(arg) is discord.Message:
-            serverid = arg.channel.server.id
-        elif type(arg) is str:
-            serverid = arg
+    def get_instance(self):
+        ctx = self.__extract_context()
+        serverid = ctx.message.channel.server.id
 
         return self.bot.manager.get_instance(serverid)
+
+    def __extract_context(self):  # extracts context, from a command call
+        # the command must be exactly 2 frames up
+        caller_frame = inspect.getouterframes(inspect.currentframe(), 2)[2]
+
+        return inspect.getargvalues(caller_frame[0]).locals['ctx']
